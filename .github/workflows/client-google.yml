@@ -19,8 +19,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build the Docker image
-        run: docker build -t client ./client
+      # - name: Build the Docker image
+      #   run: docker build -t client ./client
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v0.2.0
@@ -52,4 +52,6 @@ jobs:
       # Push the Docker image to Google Container Registry
       - name: Publish
         run: |-
-          docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+          docker pull busybox
+          docker tag busybox gcr.io/$PROJECT_ID/busybox
+          docker push gcr.io/$PROJECT_ID/busybox
