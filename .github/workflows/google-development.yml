@@ -40,10 +40,7 @@ jobs:
       # Build, Tag, and Push the Docker image to Google Container Registry
       - name: Build, Tag, Push Docker Image to GCR
         run: |-
-          docker build \
-            -t gcr.io/$PROJECT_ID/$CLIENT_IMAGE:latest \
-            -t gcr.io/$PROJECT_ID/$CLIENT_IMAGE:$GITHUB_SHA \
-            -f ./client
+          docker build -t gcr.io/$PROJECT_ID/$CLIENT_IMAGE:latest -t gcr.io/$PROJECT_ID/$CLIENT_IMAGE:$GITHUB_SHA -f ./client
           
           docker push gcr.io/$PROJECT_ID/$CLIENT_IMAGE:latest
           docker push gcr.io/$PROJECT_ID/$CLIENT_IMAGE:$GITHUB_SHA
