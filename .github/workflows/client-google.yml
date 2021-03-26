@@ -46,6 +46,7 @@ jobs:
         run: |-
           docker tag $IMAGE gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
           docker push gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
-      - name: kubectl CLI 
+
+      - name: Deploy Docker Image to GKE
         run: |-
-          kubectl version
+          kubectl apply -f ./k8s/client-deployment.yml

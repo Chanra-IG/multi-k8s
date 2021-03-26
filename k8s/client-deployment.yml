@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: client 
-          image: chanra/multi-client
+          image: gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA # chanra/multi-client
           ports:
             - containerPort: 3000
 
