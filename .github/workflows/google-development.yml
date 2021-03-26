@@ -45,8 +45,7 @@ jobs:
           --tag gcr.io/$PROJECT_ID/$CLIENT_IMAGE:$GITHUB_SHA \
           ./client
           
-          docker push gcr.io/$PROJECT_ID/$CLIENT_IMAGE:latest
-          docker push gcr.io/$PROJECT_ID/$CLIENT_IMAGE:$GITHUB_SHA
+          docker push --all-tags gcr.io/$PROJECT_ID/$CLIENT_IMAGE
 
       - name: Deploy Docker Image to GKE
         run: |-
