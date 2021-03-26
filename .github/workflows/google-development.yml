@@ -41,8 +41,8 @@ jobs:
       - name: Build, Tag, Push Docker Image to GCR
         run: |-
           docker build \
-          --tag "gcr.io/$PROJECT_ID/$CLIENT_IMAGE:latest" \
-          --tag "gcr.io/$PROJECT_ID/$CLIENT_IMAGE:$GITHUB_SHA" \
+          --tag gcr.io/$PROJECT_ID/$CLIENT_IMAGE:latest \
+          --tag gcr.io/$PROJECT_ID/$CLIENT_IMAGE:$GITHUB_SHA \
           ./client
           
           docker push gcr.io/$PROJECT_ID/$CLIENT_IMAGE:latest
@@ -51,4 +51,4 @@ jobs:
       - name: Deploy Docker Image to GKE
         run: |-
           kubectl apply -f ./k8s/client-deployment.yml
-          kubectl set image developments/client-deployment client=gcr.io/$PROJECT_ID/$CLIENT_IMAGE:$GITHUB_SHA
+          kubectl set image deployments/client-deployment client=gcr.io/$PROJECT_ID/$CLIENT_IMAGE:$GITHUB_SHA
