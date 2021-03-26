@@ -1,4 +1,4 @@
-name: Build and Deploy Client to GKE
+name: Build and Deploy Multi-K8s to GKE
 
 on:
   push:
@@ -10,6 +10,8 @@ env:
   GKE_CLUSTER: multi-cluster    # Add your cluster name here.
   GKE_ZONE: us-central1-c   # Add your cluster zone here.
   CLIENT_IMAGE: client
+  SERVER_IMAGE: server
+  WORKER_IMAGE: worker
 
 jobs:
   deploy:
@@ -36,18 +38,21 @@ jobs:
           location: ${{ env.GKE_ZONE }}
           credentials: ${{ secrets.GKE_SA_KEY }}
 
-      # docker tag $CLIENT_IMAGE gcr.io/$PROJECT_ID/$CLIENT_IMAGE:$GITHUB_SHA
       # Build, Tag, and Push the Docker image to Google Container Registry
       - name: Build, Tag, Push Docker Image to GCR
         run: |-
-          docker build \
-          --tag gcr.io/$PROJECT_ID/$CLIENT_IMAGE:latest \
-          --tag gcr.io/$PROJECT_ID/$CLIENT_IMAGE:$GITHUB_SHA \
-          ./client
+          docker build --tag gcr.io/$PROJECT_ID/$CLIENT_IMAGE:latest --tag gcr.io/$PROJECT_ID/$CLIENT_IMAGE:$GITHUB_SHA ./client
+          docker build --tag gcr.io/$PROJECT_ID/$SERVER_IMAGE:latest --tag gcr.io/$PROJECT_ID/$SERVER_IMAGE:$GITHUB_SHA ./server
+          docker build --tag gcr.io/$PROJECT_ID/$WORKER_IMAGE:latest --tag gcr.io/$PROJECT_ID/$WORKER_IMAGE:$GITHUB_SHA ./worker
           
           docker push --all-tags gcr.io/$PROJECT_ID/$CLIENT_IMAGE
+          docker push --all-tags gcr.io/$PROJECT_ID/$SERVER_IMAGE
+          docker push --all-tags gcr.io/$PROJECT_ID/$WORKER_IMAGE
 
       - name: Deploy Docker Image to GKE
         run: |-
-          kubectl apply -f ./k8s/client-deployment.yml
+          kubectl apply -f ./k8s
+
           kubectl set image deployments/client-deployment client=gcr.io/$PROJECT_ID/$CLIENT_IMAGE:$GITHUB_SHA
+          kubectl set image deployments/server-deployment server=gcr.io/$PROJECT_ID/$SERVER_IMAGE:$GITHUB_SHA
+          kubectl set image deployments/worker-deployment worker=gcr.io/$PROJECT_ID/$WORKER_IMAGE:$GITHUB_SHA

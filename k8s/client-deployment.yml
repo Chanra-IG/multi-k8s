@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: client 
-          image: gcr.io/multi-k8s-308707/client # chanra/multi-client
+          image: gcr.io/${{ secrets.GKE_PROJECT }}/client
           ports:
             - containerPort: 3000
 
