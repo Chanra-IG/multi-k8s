@@ -54,5 +54,5 @@ jobs:
         env:
           IMAGE: client
         run: |-
-          docker tag gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
+          docker tag $IMAGE gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
           docker push gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
