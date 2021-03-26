@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: client 
-          image: gcr.io/multi-k8s-308707/client:78e15a348caf12fa87c62909db957185c3a28979 # chanra/multi-client
+          image: gcr.io/multi-k8s-308707/client # chanra/multi-client
           ports:
             - containerPort: 3000
 
