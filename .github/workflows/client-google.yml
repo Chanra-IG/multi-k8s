@@ -10,7 +10,6 @@ env:
   GKE_CLUSTER: multi-cluster    # Add your cluster name here.
   GKE_ZONE: us-central1-c   # Add your cluster zone here.
   DEPLOYMENT_NAME: gke-test # Add your deployment name here.
-  IMAGE: client
 
 jobs:
   deploy:
@@ -19,8 +18,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # - name: Build the Docker image
-      #   run: docker build -t client ./client
+      - name: Build the Docker image
+        run: docker build -t client ./client
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v0.2.0
@@ -51,8 +50,9 @@ jobs:
       #       .
 
       # Push the Docker image to Google Container Registry
-      - name: Publish
+      - name: Push Docker Image to GCR
+        env:
+          IMAGE: client
         run: |-
-          docker pull busybox
-          docker tag busybox gcr.io/$PROJECT_ID/busybox
-          docker push gcr.io/$PROJECT_ID/busybox
+          docker tag gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
+          docker push gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
